@@ -17,6 +17,23 @@
                 "WaitOnNormalExit",
                 "RedirectOutput"
             ]
+        },
+        {
+            "name": "Revere Tests",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/metamap_api_test.py",
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "SNORKELDB": "postgres:///snorkel_revere",
+                "SNORKELHOME": "${workspaceRoot}"
+            },
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
         }
     ]
 }

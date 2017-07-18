@@ -11,14 +11,14 @@ MetaMap_DISEASE = '[dsyn]'
 
 class MetaMapAPI(object):
 
-    def __init__(self, mm=MetaMap):
-        self.mm = mm.get_instance(
-            '/Users/morgism/Developer/Python/metamap/public_mm/bin/metamap16')
+    def __init__(self, metamap_instance):
+        self.metamap_instance = metamap_instance
 
     def tag(self, sentence):
         sentence_text = [sentence.get("text")]
         sentence_text[0] = sentence_text[0].encode('ascii', errors='ignore')
-        concepts, error = self.mm.extract_concepts(sentence_text, [1])
+        concepts, error = self.metamap_instance.extract_concepts(sentence_text,
+                                                                 [1])
 
         for concept in concepts:
             if concept.semtypes == MetaMap_SYMPTOM:
@@ -39,3 +39,5 @@ class MetaMapAPI(object):
         for index, character_offset in enumerate(sentence['char_offsets']):
             print('index: {0}'.format(index))
             print('character_offset: {0}'.format(character_offset))
+
+        return sentence

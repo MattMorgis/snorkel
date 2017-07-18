@@ -37,7 +37,8 @@ class MetaMapAPI(object):
         disease_length = int(position_information[1])
 
         for index, character_offset in enumerate(sentence['char_offsets']):
-            print('index: {0}'.format(index))
-            print('character_offset: {0}'.format(character_offset))
+            if disease_character_start == character_offset:
+                sentence['entity_types'][index] = tag
+                sentence['entity_cids'][index] = concept.cui
 
         return sentence

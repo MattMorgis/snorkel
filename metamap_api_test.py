@@ -2,6 +2,10 @@ import unittest
 import os
 os.environ['SNORKELHOME'] = os.path.abspath('.')
 from metamap_api import MetaMapAPI
+from pymetamap import ConceptMMI
+
+MetaMap_SYMPTOM = '[sosy]'
+MetaMap_DISEASE = '[dsyn]'
 
 
 class MetamapAPITest(unittest.TestCase):
@@ -25,8 +29,9 @@ class MetamapAPITest(unittest.TestCase):
                          ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'])
 
     def test_singe_one_word_concept_in_sentence(self):
-        concept = []
-        metamap = MetaMapMock(concept)
+        line = 'index|mm|score|preferred_name|C0011849|[dsyn]|trigger|location|10/8|tree_codes'
+        concept = self.buildConcept(line)
+        metamap = MetaMapMock([concept])
         metamap_api = MetaMapAPI(metamap)
         sentence = {'text': 'John has diabetes.',
                     'char_offsets':
@@ -38,9 +43,14 @@ class MetamapAPITest(unittest.TestCase):
 
         tagged_sentence = metamap_api.tag(sentence)
         self.assertEqual(tagged_sentence['entity_types'],
-                         ['O', 'O', 'O', 'Disease'])
+                         ['O', 'O', 'Disease', 'O'])
         self.assertEqual(tagged_sentence['entity_cids'],
-                         ['O', 'O', 'O', 'C0011849'])
+                         ['O', 'O', 'C0011849', 'O'])
+
+    def buildConcept(self, line):
+        fields = line.split('|')
+        concept = ConceptMMI.from_mmi(line)
+        return concept
 
 
 class MetaMapMock(object):

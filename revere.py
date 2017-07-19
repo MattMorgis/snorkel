@@ -1,5 +1,5 @@
 """ Example Snorkel project that uses MetaMap
-    to identify symptoms as entities.
+    to identify diseases and symptoms as entities.
 """
 
 import sys
@@ -14,7 +14,7 @@ from pymetamap import MetaMap
 
 data_file_path = 'tutorials/cdr/data/CDR.BioC.small.xml'
 
-SNORKEL_SESSION = SnorkelSession()
+snorkel_session = SnorkelSession()
 
 # print sys.path
 doc_preprocessor = XMLMultiDocPreprocessor(
@@ -30,5 +30,5 @@ metamap_api = MetaMapAPI(metamap_instance)
 corpus_parser = CorpusParser(fn=metamap_api.tag)
 corpus_parser.apply(list(doc_preprocessor))
 
-print("Documents:", SNORKEL_SESSION.query(Document).count())
-print("Sentences:", SNORKEL_SESSION.query(Sentence).count())
+print("Documents:", snorkel_session.query(Document).count())
+print("Sentences:", snorkel_session.query(Sentence).count())

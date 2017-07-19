@@ -63,6 +63,9 @@ class MetaMapAPI(object):
         for index, character_offset in enumerate(sentence['char_offsets']):
             if disease_character_start == character_offset:
                 sentence['entity_types'][index] = tag
-                sentence['entity_cids'][index] = concept.cui
+                if sentence['entity_cids'][index] == 'O':
+                    sentence['entity_cids'][index] = concept.cui
+                else:
+                    sentence['entity_cids'][index] += '|' + concept.cui
 
         return sentence

@@ -47,6 +47,8 @@ class MetaMapAPI(object):
                 sentence = self.generate_entities(sentence, concept, SYMPTOM)
             elif concept.semtypes == MetaMap_DISEASE:
                 sentence = self.generate_entities(sentence, concept, DISEASE)
+            elif 'dsyn' in concept.semtypes:
+                sentence = self.generate_entities(sentence, concept, DISEASE)
 
         return sentence
 

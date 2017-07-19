@@ -110,6 +110,32 @@ class MetamapAPITest(unittest.TestCase):
         self.assertEqual(tagged_sentence['entity_cids'],
                          ['O', 'O', 'C0011849|C0020175', 'O'])
 
+    def test_multiple_semtypes_for_concept_in_sentence(self):
+        # Arrange
+        sentence_text = 'Sarah has hypertension.'
+        sentence = {'text': sentence_text,
+                    'char_offsets':
+                        [0, 6, 10, 22],
+                    'entity_types':
+                        ['O', 'O', 'O', 'O'],
+                    'entity_cids':
+                        ['O', 'O', 'O', 'O']}
+        mm_output = ("index|mm|score|preferred_name|C0011849|[dsyn,fndg]|trigger"
+                     "|location|11/12|tree_codes")
+
+        concepts = self.buildConcept(mm_output)
+        metamap = MetaMapMock(concepts)
+        metamap_api = MetaMapAPI(metamap)
+
+        # Act
+        tagged_sentence = metamap_api.tag(sentence)
+
+        # Assert
+        self.assertEqual(tagged_sentence['entity_types'],
+                         ['O', 'O', DISEASE, 'O'])
+        self.assertEqual(tagged_sentence['entity_cids'],
+                         ['O', 'O', 'C0011849', 'O'])
+
     def buildConcept(self, mm_output):
         """ Helper funciton to build mock MetaMap Concept objects.
 

@@ -59,6 +59,7 @@ class MetaMapAPI(object):
         # off by one error.
         disease_character_start = int(position_information[0]) - 1
         disease_length = int(position_information[1])
+        orginial_char_start = disease_character_start
 
         for index, character_offset in enumerate(sentence['char_offsets']):
             if disease_character_start == character_offset:
@@ -67,5 +68,13 @@ class MetaMapAPI(object):
                     sentence['entity_cids'][index] = concept.cui
                 else:
                     sentence['entity_cids'][index] += '|' + concept.cui
+
+                # Check if concept spans multipe words
+                if (index + 1) < len(sentence['char_offsets']) - 1:
+                    next_char_offset = int(sentence['char_offsets'][index + 1])
+                    word_distance = (next_char_offset -
+                                     orginial_char_start) - 1
+                    if word_distance != disease_length:
+                        disease_character_start = next_char_offset
 
         return sentence

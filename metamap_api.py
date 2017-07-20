@@ -5,8 +5,8 @@ from pymetamap import MetaMap
 
 DISEASE = "Disease"
 SYMPTOM = "Symptom"
-MetaMap_SYMPTOM = '[sosy]'
-MetaMap_DISEASE = '[dsyn]'
+MetaMap_SYMPTOM = 'sosy'
+MetaMap_DISEASE = 'dsyn'
 
 
 class MetaMapAPI(object):
@@ -43,11 +43,9 @@ class MetaMapAPI(object):
                                                                  [1])
 
         for concept in concepts:
-            if concept.semtypes == MetaMap_SYMPTOM:
+            if MetaMap_SYMPTOM in concept.semtypes:
                 sentence = self.generate_entities(sentence, concept, SYMPTOM)
-            elif concept.semtypes == MetaMap_DISEASE:
-                sentence = self.generate_entities(sentence, concept, DISEASE)
-            elif 'dsyn' in concept.semtypes:
+            elif MetaMap_DISEASE in concept.semtypes:
                 sentence = self.generate_entities(sentence, concept, DISEASE)
 
         return sentence

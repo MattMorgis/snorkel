@@ -35,24 +35,37 @@ class MetaMapAPI(object):
         corresponding entity: `Disease` or `Symptom`. Addtionally, we identify
         the `cuid` of the medical term. Ex: instances of `diabetes` and
         `diabetes mellitus` will be tagged with the same `cid`.
-
         """
+
         sentence_text = [sentence['text']]
         sentence_text[0] = sentence_text[0].encode('ascii', errors='ignore')
         concepts, error = self.metamap_instance.extract_concepts(sentence_text,
                                                                  [1])
 
         for concept in concepts:
-            if MetaMap_SYMPTOM in concept.semtypes:
-                sentence = self.generate_entities(sentence, concept, SYMPTOM)
-            elif MetaMap_DISEASE in concept.semtypes:
-                sentence = self.generate_entities(sentence, concept, DISEASE)
+            if hasattr(concept, 'semtypes'):
+                if MetaMap_SYMPTOM in concept.semtypes:
+                    sentence = self.generate_entities(
+                        sentence, concept, SYMPTOM)
+                elif MetaMap_DISEASE in concept.semtypes:
+                    sentence = self.generate_entities(
+                        sentence, concept, DISEASE)
 
         return sentence
 
     def generate_entities(self, sentence, concept, tag):
         # Ex. "10/8" -> ["10", "8"]
-        position_information = concept.pos_info.split('/')
+        # Ex. "10/8,11/12" ->
+        if ',' in concept.pos_info:
+            first_pos = concept.pos_info.split(',')
+            position_information = first_pos[0].replace(
+                "[", "").replace("]", "").split('/')
+        elif ';' in concept.pos_info:
+            first_pos = concept.pos_info.split(';')
+            position_information = first_pos[0].replace(
+                "[", "").replace("]", "").split('/')
+        else:
+            position_information = concept.pos_info.split('/')
         # MetaMap counts the quotation mark of the sentence
         # starting at index 0
         # while CoreNLP does not, therefore we are left with an

@@ -12,7 +12,7 @@ from metamap_api import MetaMapAPI
 from snorkel.models import Document, Sentence
 from pymetamap import MetaMap
 
-data_file_path = 'tutorials/cdr/data/CDR.BioC.small.xml'
+data_file_path = 'tutorials/cdr/data/CDR.BioC.xml'
 
 snorkel_session = SnorkelSession()
 
@@ -28,7 +28,7 @@ metamap_instance = MetaMap.get_instance(
     '/Users/morgism/Developer/Python/metamap/public_mm/bin/metamap16')
 metamap_api = MetaMapAPI(metamap_instance)
 corpus_parser = CorpusParser(fn=metamap_api.tag)
-corpus_parser.apply(list(doc_preprocessor))
+corpus_parser.apply(list(doc_preprocessor), parallelism=20)
 
 print("Documents:", snorkel_session.query(Document).count())
 print("Sentences:", snorkel_session.query(Sentence).count())
